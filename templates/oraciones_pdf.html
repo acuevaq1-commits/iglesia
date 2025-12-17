@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Peticiones de Oración</title>
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 12px; color: #222; }
+    h1 { font-size: 18px; margin: 0 0 8px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #999; padding: 6px; vertical-align: top; }
+    th { background: #f0f0f0; }
+    .muted { color: #666; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <h1>Peticiones de Oración</h1>
+  <p class="muted">
+    Filtros:
+    {% if desde %} Desde {{ desde }}{% endif %}
+    {% if hasta %} | Hasta {{ hasta }}{% endif %}
+    {% if estado %} | Estado {{ estado }}{% endif %}
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Fecha</th>
+        <th>Solicitante</th>
+        <th>Asunto</th>
+        <th>Detalle</th>
+        <th>Estado</th>
+        <th>Atendido por</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in oraciones %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ (o.fecha.strftime('%Y-%m-%d') if o.fecha) if o.fecha is defined else o.fecha }}</td>
+        <td>{{ o.solicitante }}</td>
+        <td>{{ o.asunto }}</td>
+        <td>{{ o.detalle }}</td>
+        <td>{{ o.estado }}</td>
+        <td>{{ o.atendido_por or '' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="muted">Sin registros</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

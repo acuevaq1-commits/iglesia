@@ -1,0 +1,39 @@
+{% for t_concejos in concejos %}
+    <tr>
+        <td style="text-align: left;"> </td>
+        <td>{{ t_concejos[1] }}</td>
+        <td>{{ t_concejos[2] }}</td>
+        <td style="text-align:center;">{{ t_concejos[3] }}</td>
+        <td style="text-align:center;">{{ t_concejos[4] }}</td>
+        <td style="text-align:center;">
+            <form action="/detaconcejo" method="post">
+                <input type="hidden" name="codeConcejo" value="{{ t_concejos[0] }}">
+                <input type="hidden" name="nombreConcejo" value="{{ t_concejos[1] }}">
+                <button type="submit" class="btn btn-info btn-sm">
+                    <i class="bi bi-search imgDetalle" title="Detalle" id="btnDetalle" width="18px" style="cursor:pointer;"></i>
+                </button>
+            </form>
+        </td>
+        <td style="text-align: center;">
+            <button class="btn btn-warning btn-sm">
+                <i class="bi bi-pencil-square imgEditar"
+                    title="Editar"
+                    id="btnEditar"
+                    data-bs-toggle="modal"
+                    data-bs-target="#Concejo-modal"
+                    width="18px"                        
+                    style="cursor:pointer;"                        
+                    data-id="{{ t_concejos[0] }}" ></i>
+            </button>
+
+            <button class="btn btn-danger btn-sm">
+                <i class="bi bi-trash btnEliminar"                        
+                    title="Eliminar"
+                    id="btnEliminar"
+                    width="18px"
+                    style="cursor:pointer;"
+                    data-url="{{ url_for('concejo.eli_concejo', codigo=t_concejos[0]) }}"></i>
+            </button>
+        </td>
+    </tr>
+{% endfor %}

@@ -1,0 +1,16 @@
+<!-- {% if tablaHisto %} -->
+    {% for t_cambios in tablaCambi %}
+        <tr>
+            <td style="text-align: center; width: 5%;"> </td>
+            <td style="text-align: center; width: 25%;"><i>{{ t_cambios[1] }}</i></td>
+            <td style="text-align: center; width: 25%;"><i>{{ t_cambios[2] }}</i></td>
+            <td style="text-align: center; width: 15%;"><i>{{ t_cambios[3] }}</i></td>
+            <td style="text-align: center; width: 15%;"><i>{{ t_cambios[4] }}</i></td>
+            <td style="text-align: center; width: 15%;"><i>{{ t_cambios[5] }}</i></td>
+        </tr>
+    {% endfor %}
+<!-- {% else %}
+        <tr>
+            <td colspan="6">Sinnnn registros</td>
+        </tr>        
+{% endif %} -->

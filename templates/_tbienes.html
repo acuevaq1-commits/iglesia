@@ -1,0 +1,30 @@
+{% for t_tbienes in tablaTbienes %}
+    <tr>
+        <td style="text-align: left;"> </td>
+        <td>{{ t_tbienes[1] }}</td>
+        <td>{{ t_tbienes[2] }}</td>
+        <td>{{ t_tbienes[3] }}</td>
+        <td>{{ t_tbienes[4] }}</td>
+        <td style="text-align: center;">
+            <button class="btn btn-warning btn-sm">
+                <i class="bi bi-pencil-square imgEditar"
+                    title="Editar"
+                    id="btnEditar"
+                    data-bs-toggle="modal"
+                    data-bs-target="#Tbien-modal"
+                    width="18px"                        
+                    style="cursor:pointer;"                        
+                    data-id="{{ t_tbienes[0] }}" ></i>
+            </button>
+
+            <button class="btn btn-danger btn-sm">
+                <i class="bi bi-trash btnEliminar"
+                    title="Eliminar"
+                    id="btnEliminar"
+                    width="18px"
+                    style="cursor:pointer;"
+                    data-url="{{ url_for('tipobien.eli_tipobien', code=t_tbienes[0]) }}"></i>
+            </button>
+        </td>
+    </tr>
+{% endfor %}

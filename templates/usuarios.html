@@ -1,0 +1,474 @@
+{% extends "base.html" %}
+{% block title %}Tab 1{% endblock %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <style>
+        .error { color: red; font-size: 0.9rem; }
+        input.invalid { border-color: red; }
+
+        input::placeholder {        
+        font-style: italic;
+        }
+
+
+        /* Activo */
+        #tablaHistorial_wrapper .page-item.active .page-link {
+        background: #e72a2a;
+        border-color: #e93f3f;
+        color: #fff;
+        }
+
+        /* Hover */
+        #tablaHistorial_wrapper .page-link:hover {
+        background: #e5f2fb;
+        border-color: #000000;
+        }
+
+        /* Deshabilitado */
+        #tablaHistorial_wrapper .page-item.disabled .page-link {
+        background: #f9fafb;
+        color: #9ca3af;
+        border-color: #e5e7eb;
+        }
+
+        /* (Opcional) si usas Bootstrap */
+        #tablaHistorial.table thead th {
+        background-color: #fa8c1e;
+        color: #fff;
+        }
+
+
+        
+        /* Activo */
+        #tablaUsuarios_wrapper .page-item.active .page-link {
+        background: #e90e0e;
+        border-color: #e90e0e;
+        color: #fff;
+        }
+
+        /* Hover */
+        #tablaUsuarios_wrapper .page-link:hover {
+        background: #e5f2fb;
+        border-color: #000000;
+        }
+
+        /* Deshabilitado */
+        #tablaUsuarios_wrapper .page-item.disabled .page-link {
+        background: #f9fafb;
+        color: #9ca3af;
+        border-color: #e5e7eb;
+        }
+
+        /* (Opcional) si usas Bootstrap */
+        #tablaUsuarios.table thead th {
+        background-color: #f67b00;
+        color: #fff;
+        }
+
+        .table.display  tbody tr:nth-child(odd) td,
+        .table.display tbody tr:nth-child(odd) th {
+        background-color: #ffe1b6;
+        }
+
+        .table.display tbody tr:nth-child(even) td,
+        .table.display tbody tr:nth-child(even) th {
+        background-color: #fbecda;
+        color:#000000;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    
+    <!--  DataTables + integración Bootstrap 5 -->
+    <link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bolder"> | Usuarios | </a>
+            <span>Bienvenido/a {{session['name']}} {{session['surnames']}}<a href="{{url_for('logout')}}" class="mx-3">Salir</a></span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Agrega Roles 
+        <div class="card mt-3 w-25 mx-auto d-block">
+            <div class="card-body d-flex">
+                <img src="{{url_for('static', filename='images/plus-circle-solid.svg')}}" id="btnNuevoUsuario2" width="25" class="mx-auto d-block" data-bs-toggle="modal" data-bs-target="#Usu-modal" title="Nuevo Usuario">
+            </div>
+        </div>-->
+
+        <div style="max-width: 900px; margin: 30px auto;">
+            <button class="btn btn-primary btn-sm" id="btnNuevoUsuario" data-bs-toggle="modal" data-bs-target="#Usu-modal" title="Nuevo Usuario">
+                &nbsp;&nbsp;&nbsp;<i class="bi bi-person-vcard-fill" width='18px' style="cursor:pointer;"></i>
+                Nuevo Usuario &nbsp;&nbsp;&nbsp;
+            </button>
+            <br><br>
+            <table id="tablaUsuarios" class="display table table-striped table-hover table-bordered table-sm align-middle" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">Item</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th style="width: 15%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% include "_usuario.html" %}                
+                </tbody>
+            </table>            
+            <div id="msjTabla" style="color:red; margin-top:10px;"></div>            
+        </div>        
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    
+    
+
+    
+
+    <!-- Modal de Usuario -->
+    <div class="modal fade" id="Usu-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"> :: Usuario :: </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formUsuario" action="/nuevo_usuario" method="post">
+                        <input id="valorCode" name="valorCode" type="hidden"/>
+                        <div class="row mb-3">
+                            <div class="col-md-3" style="text-align: right;">
+                                <label class="form-label" >Nombres:</label>                            
+                            </div>
+                            <div class="col-md-9" style="text-align: left;">                            
+                                <input type="text" autocomplete="off" class="form-control error" id="txt_nombres" name="txt_nombres" placeholder="Ejm:  Albert">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3" style="text-align: right;">
+                                <label class="form-label" >Apellidos:</label>
+                            </div>
+                            <div class="col-md-9" style="text-align: left;">
+                                <input type="text" autocomplete="off" class="form-control error" id="txt_apellidos" name="txt_apellidos" placeholder="Ejm:  Cueva">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3" style="text-align: right;">
+                                <label class="form-label" >Email:</label>                            
+                            </div>
+                            <div class="col-md-9" style="text-align: left;">                            
+                                <input type="text" autocomplete="off" class="form-control error" id="txt_email" name="txt_email" placeholder="Ejm:  jperez@gmail.com">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3" style="text-align: right;">
+                                <label class="form-label" >Password:</label>                            
+                            </div>
+                            <div class="col-md-9" style="text-align: left;">                            
+                                <input type="text" autocomplete="off" class="form-control error" id="txt_password" name="txt_password" placeholder="Ejm:  ********">
+                            </div>
+                        </div>
+                        <div id="mensaje" style="color:red; margin-top:10px;"></div>
+                        <br><br>
+                        <div class="row mb-3">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6" style="text-align: center;">
+                                <button type="submit" name="action" value="guardar" class="btn btn-primary w-100">Guardar</button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6" style="text-align: center;">
+                                <button type="button" id="btnCerrar" class="btn btn-outline-danger w-100" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Historial -->
+    <div class="modal fade" id="HistorialModal" tabindex="-1" aria-labelledby="exampleModalHistorial" aria-hidden="true">        
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalHistorial"> :: Historial :: </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="HistorialModalBody">
+                    <table id="tablaHistorial" class="display table table-striped table-hover table-bordered table-sm align-middle" style="width:100%">                    
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; width: 5%;">Item</th>
+                                <th style="text-align: center; width: 25%;">Nombre</th>
+                                <th style="text-align: center; width: 25%;">Email</th>
+                                <th style="text-align: center; width: 15%;">Ingreso</th>
+                                <th style="text-align: center; width: 15%;">Cierre</th>
+                                <th style="text-align: center; width: 15%;">IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% include "_usuhistorial.html" %}
+                        </tbody>
+                    </table>                    
+                </div>
+            </div>                
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables + integración Bootstrap 5 -->
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+    <script>
+        const opcionesIniciales = {
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
+            //order: [[0, 'desc']], // orden por ID desc (ajusta a tu gusto)
+            deferRender: true,
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json' },
+            // Opcional: layout Bootstrap
+            dom: "<'row mb-2'<'col-sm-6'l><'col-sm-6'f>> <'row'<'col-12'tr>> <'row mt-2'<'col-sm-5'i><'col-sm-7'p>>",
+            columns: [
+                { "data": "" },
+                { "data": "nombres" },
+                { "data": "apellidos" },
+                { "data": "email", className: "dt-center" },
+                { "data": "password_" , className: "dt-center" },
+                { "data": "" }
+            ],
+            columnDefs: [
+                {
+                    targets: [0],
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                },
+                {
+                    targets: [1,2,3,4],
+                    orderable: false,  // desactiva ordenamiento
+                    searchable: false  // desactiva búsqueda
+                }
+            ]
+        }
+        /*******************************************************************************/
+        const opcionesHistorial = {
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],            
+            deferRender: true,
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json' },            
+            dom: "<'row mb-2'<'col-sm-6'l><'col-sm-6'f>> <'row'<'col-12'tr>> <'row mt-2'<'col-sm-5'i><'col-sm-7'p>>",            
+            columns: [
+                { "data": "" },
+                { "data": "nombres" },                
+                { "data": "email", className: "dt-center" },
+                { "data": "fecha_actividad" },
+                { "data": "fecha_cierre" , className: "dt-center" },
+                { "data": "ippp" }
+            ],
+            columnDefs: [
+                {
+                    targets: [0],
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                },
+                {
+                    targets: [1,2,3,4,5],
+                    orderable: false,  // desactiva ordenamiento
+                    searchable: false  // desactiva búsqueda
+                }
+            ]
+        }        
+        /*******************************************************************************/
+        $(document).ready(function () {
+            let dt = $('#tablaUsuarios').DataTable(opcionesIniciales);
+
+            document.getElementById("btnCerrar").addEventListener("click", () => {
+                document.getElementById("txt_nombres").value = "";
+                document.getElementById("txt_apellidos").value = "";
+                document.getElementById("txt_email").value = "";
+                document.getElementById("txt_password").value = "";
+                document.getElementById("mensaje").textContent = "";
+            });
+            /*------------------------------------------------------------------------------*/
+            document.getElementById("btnNuevoUsuario").addEventListener("click", () => {
+                document.getElementById("txt_nombres").value = "";
+                document.getElementById("txt_apellidos").value = "";
+                document.getElementById("txt_email").value = "";
+                document.getElementById("txt_password").value = "";
+                document.getElementById("mensaje").textContent = "";
+            });
+            /*------------------------------------------------------------------------------*/
+            document.getElementById("formUsuario").addEventListener("submit", async (e) => {
+                //alert("submit");
+                codigo = document.getElementById('valorCode').value;
+
+                e.preventDefault(); // evitar recargar
+                const formData = new FormData(e.target);
+                const response = await fetch("/nuevo_usuario", { method: "POST", body: formData });
+
+                const data = await response.json();
+                const mensaje = document.getElementById("mensaje");
+                
+                if (data.error) {
+                    mensaje.style.color = "red";
+                    mensaje.textContent = data.error;
+                } else if (data.success) {
+                    mensaje.style.color = "green";
+                    mensaje.textContent = data.success;
+                    //e.target.reset(); // limpiar formulario
+                    cargarTablaUsuario();
+                }
+            });
+            /*------------------------------------------------------------------------------*/
+            document.addEventListener('click', async (e) => {              
+                const img = e.target.closest('.imgHistorial');
+                if (!img) return;
+                const codigo = img.dataset.id;
+
+                try {                              
+                    //const tabla = document.getElementById('tablaHistorial');
+                    //alert("tabla: " + tabla);
+
+                    const resp = await fetch(`/tblhistorialUsu/${codigo}`, { headers: { 'Accept': 'text/html' }, cache: 'no-store' });
+                    //alert("resp: "+ resp);
+                    const htmlTabla = await resp.text();
+                    //alert("htmlTabla: " + htmlTabla);
+                    // Si ya estaba inicializada, destrúyela antes de cambiar el DOM                
+                    if ($.fn.DataTable.isDataTable('#tablaHistorial')) {
+                        $('#tablaHistorial').DataTable().destroy();
+                    }
+
+                    $('#tablaHistorial tbody').html(htmlTabla);
+                    $('#tablaHistorial').DataTable(opcionesHistorial);
+
+                } catch (err) {
+                    alert(err.message);
+                }
+            });
+        });        
+        /*******************************************************************************/
+        $(document).on('click', '#tablaUsuarios tbody .btnEliminar', function (e) {
+            e.preventDefault();
+            const mensajeDiv = document.getElementById("msjTabla");
+            const url = this.dataset.url || this.href;
+            if (!confirm('¿Confirma que desea eliminar registro?')) return;
+
+            fetch(url)
+                .then(r => {
+                    if (!r.ok) {
+                        alertHTML = '<div class="alert alert-danger alert-dismissible fade show mt-2" role="alert"> ❌ Ocurrió un error"} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>';
+                    } else
+                        alertHTML = '<div class="alert alert-danger alert-dismissible fade show mt-2" role="alert"> Registro Eliminado <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>';
+                    
+                    mensajeDiv.innerHTML = alertHTML;
+                    setTimeout(() => {
+                        const alerta = mensajeDiv.querySelector(".alert");
+                        if (alerta) {
+                            alerta.classList.remove("show"); // inicia la animación de fade
+                            alerta.classList.add("hide");                            
+                            alerta.addEventListener("transitionend", () => alerta.remove()); // quitar del DOM tras animación (opcional)
+                        }
+                    }, 3000);                        
+                })
+                .then(() => cargarTablaUsuario())
+                .catch(err => alert('Error eliminando: ' + err.message));
+        });
+        /*******************************************************************************/
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // alert(document.querySelectorAll('#tablaHistorial').length);
+            // alert(document.querySelectorAll('#HistorialModal').length);
+            // const t = document.querySelector('#tablaHistorial');
+            // alert("contains: " + document.getElementById("HistorialModal").contains(t));
+            // alert("contains: " + document.getElementById("DIVXXX").contains(t));
+            
+            const modal = document.getElementById("HistorialModalBody");
+            const tabla = document.getElementById("tablaHistorial");
+
+            // Mover la tabla dentro del div
+            if (modal && tabla) {
+                modal.appendChild(tabla);
+            } else {
+                alert("No se encontró el div o la tabla");
+            }
+            /*-------------------------------------------------------------------------*/
+            document.addEventListener('click', async (e) => {              
+                const img = e.target.closest('.imgEditar');
+                if (!img) return;
+
+                const codigo = img.dataset.id;                
+                document.getElementById('valorCode').value = codigo;
+
+                try {
+                    const resp = await fetch(`/edit_usuario/${codigo}`, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const usua = await resp.json();
+
+                    document.getElementById('txt_nombres').value  = usua.nombres;
+                    document.getElementById('txt_apellidos').value= usua.apellidos;
+                    document.getElementById('txt_password').value   = usua.email;
+                    document.getElementById('txt_email').value   = usua.email;
+                    //document.getElementById('txt_telefono').value   = perso.telefono;
+                    
+                } catch (err) {
+                    alert(err.message);
+                }
+            });
+        });
+        /*******************************************************************************/
+        async function cargarTablaUsuario() {
+            try {
+                const res = await fetch('/tblusuarios', { cache: 'no-store' });
+                const htmlTabla = await res.text();
+
+                // Si ya estaba inicializada, destrúyela antes de cambiar el DOM
+                if ($.fn.DataTable.isDataTable('#tablaUsuarios')) {
+                    $('#tablaUsuarios').DataTable().destroy();
+                }
+                
+                $('#tablaUsuarios tbody').html(htmlTabla);
+                $('#tablaUsuarios').DataTable(opcionesIniciales);
+            } catch (e) {
+                console.error('Error cargando tabla:', e);
+            }
+        }        
+    </script>
+</body>
+</html>
+
+{% endblock %}

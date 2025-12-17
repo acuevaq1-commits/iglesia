@@ -1,0 +1,46 @@
+{% if tabla %}
+    {% for t_usuarios in tabla %}
+        <tr>
+            <td style="text-align: left;"> </td>
+            <td>{{ t_usuarios[1] }}</td>
+            <td>{{ t_usuarios[2] }}</td>
+            <td>{{ t_usuarios[3] }}</td>
+            <td> HOLAHOLA </td>
+            <td style="text-align: center;">
+
+                <button class="btn btn-info btn-sm">
+                    <i class="bi bi-eye imgHistorial"
+                        title="Historial"
+                        id="btnHistorial"
+                        data-bs-toggle="modal"
+                        data-bs-target="#HistorialModal"
+                        width="18px"
+                        style="cursor:pointer;"                        
+                        data-id="{{ t_usuarios[0] }}" ></i>
+                </button>
+
+                <button class="btn btn-warning btn-sm">
+                    <i class="bi bi-pencil-square imgEditar"
+                        title="Editar"
+                        id="btnEditar"
+                        data-bs-toggle="modal"
+                        data-bs-target="#Usu-modal"
+                        width="18px"                        
+                        style="cursor:pointer;"                        
+                        data-id="{{ t_usuarios[0] }}" ></i>
+                </button>
+
+                <button class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash btnEliminar"                        
+                        title="Eliminar"
+                        id="btnEliminar"
+                        width="18px"
+                        style="cursor:pointer;"
+                        data-url="{{ url_for('usuario.eli_usuario', code=t_usuarios[0]) }}"></i>
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <tr><td colspan="6" class="text-center">Sin registros</td></tr>
+{% endif %}

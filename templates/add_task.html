@@ -1,0 +1,176 @@
+{% extends "menulateral.html" %}
+
+<style>
+#divContenedor { /*contiene dos divs, el cuadro grande y el que contiene a los dos chicos*/  
+display:flex;
+flex-direction:row;
+width:100%; /*100vw=100% del ancho del view*/
+height:100%; /*100vh=100% del alto del view*/
+}
+
+#divFoto {
+width:30%; /*se reparte el ancho con el divContenedorChicos, que será del 33%*/
+}
+
+#divContenedorChicos { /*div que contiene a los dos pequeños en vertical (column)*/
+display:flex;
+flex-direction:column;
+width:100%;
+height:100%;
+justify-content:flex-start;
+}
+
+#divChico1 {
+width:100%; /*todo el ancho del padre (divContenedorChicos) */
+height:50%; /*la mitad de altura del padre*/    
+}
+
+#divChico2{
+width:100%;
+height:50%;    
+}
+</style>
+
+<div class="container">
+<h4>Creación de Persona</h4>
+<br>
+    <div id="divContenedor">
+        <div id="divFoto">
+            <img src="{{ url_for('static', filename='imagenes/user.png') }}" alt="imagen de portada" width="220px">            
+        </div>
+        <div id="divContenedorChicos">
+            <div id="divChico1">
+                <div class="form-group row">                                
+                    <label for="txtTipo" class="col-sm-2 col-form-label">Nombre:</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="txtNombre" name="txtNombre" class="form-control" required>
+                    </div>
+                </div><br>
+            </div>
+            <div id="divChico2">
+                <div class="form-group row">
+                    <label for="txtTipo" class="col-sm-2 col-form-label">Tipo Persona:</label>
+                    <div class="col-sm-3">
+                        <select id="cboTipoPersona" class="form-control">
+                            <option id="miembro">[ Miembro de la Iglesia ]</option>
+                            <option id="simpatizante">[ Simpatizante ]</option>
+                            <option id="otro">[ Otro ]</option>
+                        </select>
+                    </div>
+                </div><br>
+            </div>
+            <div id="divChico3">
+                <div class="form-group row">
+                    <label for="txtTipo" class="col-sm-2 col-form-label">Fecha Nacimiento:</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="fecNacimiento" name="fecNacimiento" class="form-control" required>
+                    </div>
+                </div><br>
+            </div>                
+            <div id="divChico4">
+                <div class="form-group row">
+                    <label for="cboSexo" class="col-sm-2 col-form-label">Sexo:</label>
+                    <div class="col-sm-3">
+                        <select id="cboEstadoCivil" class="form-control">
+                            <option id="masculino">[ Masculino ]</option>
+                            <option id="femenino">[ Femenino ]</option>                            
+                        </select>
+                    </div>
+                </div><br>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="txtDescripcion" class="col-sm-2 col-form-label">Dirección:</label>
+        <div class="col-sm-6">
+            <input type="text" id="txtDescripcion" name="txtDescripcion" class="form-control" required>
+        </div>
+    </div><br>
+    <div class="form-group row">
+        <label for="txtCorreo" class="col-sm-2 col-form-label">Correo:</label>
+        <div class="col-sm-4">
+            <input type="text" id="txtCorreo" name="txtCorreo" class="form-control">
+        </div>
+    </div><br>
+    <div class="form-group row">
+        <label for="txtOcupacion" class="col-sm-2 col-form-label">Ocupación:</label>
+        <div class="col-sm-4">
+            <input type="text" id="txtOcupacion" name="txtOcupacion" class="form-control">            
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Abrir
+            </button>
+        </div>
+    </div><br>
+    <div class="form-group row">
+        <label for="ciudad" class="col-sm-2 col-form-label">Ciudad:</label>
+        <div class="col-sm-4">
+            <input type="text" id="ciudad" name="ciudad" class="form-control" required>
+        </div>
+    </div><br>
+    <div class="form-group row">
+        <label for="cboEstadoCivil" class="col-sm-2 col-form-label">Estado Civil:</label>
+        <div class="col-sm-3">
+            <select id="cboEstadoCivil" class="form-control">
+                <option id="casado">[ Casado ]</option>
+                <option id="soltero">[ Soltero ]</option>
+                <option id="viudo">[ Viudo ]</option>
+                <option id="divorciado">[ Divorciado ]</option>
+            </select>
+        </div>
+    </div><br>
+    <div class="form-group row">
+        <label for="telefono" class="col-sm-2 col-form-label">Teléfono:</label>
+        <div class="col-sm-2">
+            <input type="text" id="telefono" name="telefono" class="form-control">
+        </div>
+    </div><br>    
+    <div class="form-group row">
+        <label for="fecIngreso" class="col-sm-2 col-form-label">Fecha de Ingreso:</label>
+        <div class="col-sm-2">
+            <input type="text" id="fecIngreso" name="fecIngreso" class="form-control" required>
+        </div>
+    </div><br>
+    <div class="form-group row">
+        <label for="cboEstado" class="col-sm-2 col-form-label">Estado:</label>
+        <div class="col-sm-3">
+            <select id="cboEstado" class="form-control">
+                <option id="activo">Activo</option>
+                <option id="inactivo">Inactivo</option>                
+            </select>    
+        </div>
+    </div><br>
+    <div class="form-group row">
+        <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
+        <div class="col-sm-4">
+            <input type="text" value="{{ current_date }}" id="fecha" name="fecha" style="width: 150px;" class="form-control" disabled="disabled">
+        </div>
+    </div><br>
+    <div class="mb-3">         
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button type="submit" class="btn btn-success">Guardar</button>   
+            <a href="{{ url_for('dashboard') }}" class="btn btn-info">Regresar</a>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

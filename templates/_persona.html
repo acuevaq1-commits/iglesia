@@ -1,0 +1,29 @@
+{% for t_personas in persona %}
+    <tr>
+        <td style="text-align: left; width: 8%;"> </td>
+        <td>{{ t_personas[1] }}</td>
+        <td>{{ t_personas[2] }}</td>
+        <td>{{ t_personas[3] }}</td>
+        <td>{{ t_personas[4] }}</td>
+        <td style="text-align: center;">
+            <button class="btn btn-warning btn-sm">
+                <i class="bi bi-pencil-square"
+                    title="Editar"
+                    id="btnEditar"
+                    data-bs-toggle="modal"
+                    data-bs-target="#task-modal"
+                    width='18px'
+                    style="cursor:pointer;"
+                    data-id="{{ t_personas[0] }}" ></i>
+            </button>
+            <button class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"
+                    title="Eliminar"
+                    id="btnEliminar"
+                    width="18px"
+                    style="cursor:pointer;"
+                    data-url="{{ url_for('persona.eli_persona', codigo=t_personas[0]) }}"></i>
+            </button>
+        </td>
+    </tr>        
+{% endfor %}

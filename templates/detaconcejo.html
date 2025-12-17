@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}Tab 1{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+    <!-- DataTables + integración Bootstrap 5 -->
+    <link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bolder"> | Detalle del Concejo | </a>
+            <span>Bienvenido/a {{session['name']}} {{session['surnames']}}<a href="{{url_for('logout')}}" class="mx-3">Salir</a></span>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div style="width: 100%; margin: 30px auto;">
+            <button class="btn btn-info btn-sm" id="btnNuevoConcejal" data-bs-toggle="modal" data-bs-target="#Concejal-modal" title="Nuevo Concejal">
+                &nbsp;&nbsp;&nbsp;<i class="bi bi-person-plus-fill" width='18px' style="cursor:pointer;"></i>
+                Nuevo Concejal &nbsp;&nbsp;&nbsp;
+            </button>
+            <br>
+            <div class="row mb-3">
+                <div class="col-md-4" style="text-align: right;">
+                    &nbsp;
+                </div>
+                <div class="col-md-4" style="text-align: left;">
+                    <select class="form-select" id="cboConcejo1" name="cboConcejo1" disabled="disabled">
+                            <option value="{{ codeConcejo }}">{{ nombreConcejo }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <table id="tablaConcejales" class="display table table-striped table-hover table-bordered table-sm align-middle" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">Item</th>
+                        <th>Concejo</th>
+                        <th>Ministerio</th>
+                        <th>Responsable</th>
+                        <th>Apoyo</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th style="width: 10%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% include "_detaconcejales.html" %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+    <!-- Aperturar Concejo-->
+    <div class="modal fade" id="Concejal-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel"> :: Registro Concejal :: </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formConcejal" action="/nuevo_concejal" method="post">
+                    <input type="hidden" id="valorCode" name="valorCode" />
+                    <input type="hidden" id="cboConcejo_hidden" name="cboConcejo_hidden" value="{{ codeConcejo }}">
+                    <div class="row mb-3">
+                        <div class="col-md-3" style="text-align: right;">
+                            <label class="form-label"> Concejo:</label>
+                        </div>
+                        <div class="col-md-6" style="text-align: left;">
+                            <select class="form-select" id="cboConcejo" name="cboConcejo" disabled="disabled">                                
+                                <option value="{{ codeConcejo }}">{{ nombreConcejo }}</option>
+                            </select>                                
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3" style="text-align: right;">
+                            <label class="form-label"> Ministerio:</label>
+                        </div>
+                        <div class="col-md-6" style="text-align: left;">
+                            <select class="form-select" id="cboMinisterio" name="cboMinisterio">
+                                <option value="">Seleccione un Ministerio</option>
+                                {% for minis in ministerios %}
+                                    <option value="{{ minis[0] }}">{{ minis[1] }}</option>
+                                {% endfor %}
+                            </select>                                
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3" style="text-align: right;">
+                            <label class="form-label" >Responsable:</label>
+                        </div>
+                        <div class="col-md-6" style="text-align: left;">
+                            <select class="form-select" id="cboResponsable" name="cboResponsable">
+                                <option value="">Seleccione un Responsable</option>
+                                {% for respo in responsables %}
+                                    <option value="{{ respo[0] }}">{{ respo[1] }}</option>
+                                {% endfor %}
+                            </select>                                
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3" style="text-align: right;">
+                            <label class="form-label" >Apoyo:</label>
+                        </div>
+                        <div class="col-md-6" style="text-align: left;">
+                            <select class="form-select" id="cboApoyo" name="cboApoyo">
+                                <option value="">Seleccione un Apoyo</option>
+                                {% for apoyo in apoyos %}
+                                    <option value="{{ apoyo[0] }}">{{ apoyo[1] }}</option>
+                                {% endfor %}
+                            </select>                                
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3" style="text-align: right;">
+                            <label class="form-label" >Desde:</label>                            
+                        </div>
+                        <div class="col-md-9" style="text-align: left;">                            
+                            <input type="date" class="form-control" style="width: auto;" id="txt_desde" name="txt_desde" placeholder="Seleccione una fecha" min="2025-01-01" max="2025-12-31"> <!-- min="2025-01-01" max="2025-12-31" -->
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3" style="text-align: right;">
+                            <label class="form-label" >Hasta:</label>
+                        </div>
+                        <div class="col-md-9" style="text-align: left;">                            
+                            <input type="date" class="form-control" style="width: auto;" id="txt_hasta" name="txt_hasta" placeholder="Seleccione una fecha" min="2025-01-01" max="2025-12-31"> <!-- min="2025-01-01" max="2025-12-31" -->
+                        </div>
+                    </div>
+                    <div id="mensaje" style="color:red; margin-top:10px;"></div>
+                    <br><br>
+                    <div class="row mb-3">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6" style="text-align: center;">
+                            <button type="submit" name="action" value="guardar" class="btn btn-primary w-100">Guardar</button>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6" style="text-align: center;">
+                            <button type="button" id="btnCerrar" class="btn btn-outline-danger w-100" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>                    
+                </form>            
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables + integración Bootstrap 5 -->
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+    <script>
+        let cboConcejo_;
+        const opcionesIniciales = {
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
+            deferRender: true,
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json' },
+            dom: "<'row mb-2'<'col-sm-6'l><'col-sm-6'f>> <'row'<'col-12'tr>> <'row mt-2'<'col-sm-5'i><'col-sm-7'p>>",
+            // columns: [
+            //     { "data": "" },
+            //     { "data": "concejo" },
+            //     { "data": "ministerio" },
+            //     { "data": "responsable", className: "dt-center" },
+            //     { "data": "apoyo", className: "dt-center" },
+            //     { "data": "desde", className: "dt-center" },
+            //     { "data": "hasta", className: "dt-center" },
+            //     { "data": "X" },
+            // ],
+            columnDefs: [
+                {
+                    targets: [0],
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                },
+                {
+                    targets: [1,2,3,4,5],
+                    orderable: false,  // desactiva ordenamiento
+                    searchable: false  // desactiva búsqueda
+                }
+            ]
+        };
+        /*******************************************************************************/
+        $(document).ready(function () {
+            //let dt = $('#tablaConcejales').DataTable(opcionesIniciales);
+            cboConcejo_ = document.getElementById("cboConcejo_hidden").value;
+            cargarTablaConcejales(cboConcejo_);
+            /*----------------------------------------------------------------------*/
+            document.getElementById("btnCerrar").addEventListener("click", () => {
+                document.getElementById("cboMinisterio").value = "";
+                document.getElementById("cboResponsable").value = "";
+                document.getElementById("cboApoyo").value = "";
+                document.getElementById("txt_desde").value = "";
+                document.getElementById("txt_hasta").value = "";
+                document.getElementById("mensaje").textContent = "";
+            });
+            /*------------------------------------------------------------------------------*/
+            document.getElementById("btnNuevoConcejal").addEventListener("click", () => {
+                document.getElementById("cboMinisterio").value = "";
+                document.getElementById("cboResponsable").value = "";
+                document.getElementById("cboApoyo").value = "";
+                document.getElementById("txt_desde").value = "";
+                document.getElementById("txt_hasta").value = "";
+                document.getElementById("mensaje").textContent = "";
+            });
+            /*----------------------------------------------------------------------*/
+            document.getElementById("formConcejal").addEventListener("submit", async (e) => {                
+                e.preventDefault(); // evitar recargar                
+                const formData = new FormData(e.target);
+                const response = await fetch("/nuevo_concejal", { method: "POST", body: formData });                
+                const data = await response.json();
+                //alert("data: " + data);
+                const mensaje = document.getElementById("mensaje");
+                //alert("mensaje: " + mensaje);
+                //alert("error: " + data.error);
+                //alert("success: " + data.success);
+                if (data.error) {
+                    mensaje.style.color = "red";
+                    mensaje.textContent = data.error;
+                } else if (data.success) {
+                    mensaje.style.color = "green";
+                    mensaje.textContent = data.success;
+                    //e.target.reset(); // limpiar formulario                 
+                    cargarTablaConcejales(cboConcejo_);
+                }
+            });
+        });
+        /*-------------------------------------------------------------------------*/
+        $(document).on('click', '#tablaConcejales tbody .btnEliminar', function (e) {
+            e.preventDefault();
+            const url = this.dataset.url || this.href;
+            if (!confirm('¿Confirma que desea eliminar registro?')) return;
+            
+            fetch(url)
+                .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); })
+                .then(() => cargarTablaConcejales(cboConcejo_))
+                .catch(err => alert('Error eliminando: ' + err.message));
+        });
+        /*-------------------------------------------------------------------------*/
+        document.addEventListener('click', async (e) => {
+            const img = e.target.closest('.imgEditar');
+            if (!img) return;
+            const codigo = img.dataset.id;
+            document.getElementById('valorCode').value = codigo;
+            
+            try {
+                const resp = await fetch(`/edit_concejal/${codigo}`, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const conce_ = await resp.json();
+
+                //document.getElementById('cboConcejo').value = conce_.concejo;
+                document.getElementById('cboMinisterio').value = conce_.ministerio;
+                document.getElementById('cboResponsable').value = conce_.responsable;
+                document.getElementById('cboApoyo').value = conce_.apoyo;
+                document.getElementById('txt_desde').value = conce_.inicio;
+                document.getElementById('txt_hasta').value = conce_.termino;
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+        /*******************************************************************************/
+        async function cargarTablaConcejales(cboConcejo) {
+            try {                
+                const res = await fetch(`/tblconcejales/${cboConcejo}`, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+                const htmlTabla = await res.text();                                
+                //Si ya estaba inicializada, destrúyela antes de cambiar el DOM
+                if ($.fn.DataTable.isDataTable('#tablaConcejales')) {
+                    $('#tablaConcejales').DataTable().destroy();
+                }
+                
+                $('#tablaConcejales tbody').html(htmlTabla);     // inserta las <tr> renderizadas
+                $('#tablaConcejales').DataTable(opcionesIniciales);
+            } catch (e) {
+                console.error('Error cargando tabla:', e);
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+{% endblock %}

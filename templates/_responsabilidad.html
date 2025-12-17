@@ -1,0 +1,48 @@
+<!-- {% if tablaRespo %} -->
+    {% for t_responsabili in tablaRespo %}
+        <tr>
+            <td>{{ t_responsabili[0] }}</td>
+            <td>{{ t_responsabili[1] }}</td>
+            <td>{{ t_responsabili[2] }}</td>
+            <td>{{ t_responsabili[3] }}</td>
+            <td>{{ t_responsabili[4] }}</td>
+            <td>{{ t_responsabili[5] }}</td>
+            <td>{{ t_responsabili[6] }}</td>
+            <td>{{ t_responsabili[7] }}</td>
+            <td style="text-align: center;">
+                <button class="btn btn-info btn-sm">
+                    <i class="bi bi-eye imgCambios"
+                        title="Cambios"
+                        id="btnCambios"
+                        data-bs-toggle="modal"
+                        data-bs-target="#CambiosModal"
+                        width="18px"
+                        style="cursor:pointer;"                        
+                        data-id="{{ t_responsabili[0] }}"></i>
+                </button>
+
+                <button class="btn btn-warning btn-sm">
+                    <i class="bi bi-pencil-square imgEditar"
+                        title="Editar"
+                        id="btnEditar"
+                        data-bs-toggle="modal"
+                        data-bs-target="#Respo-modal"                        
+                        width="18px"
+                        style="cursor:pointer;"
+                        data-id="{{ t_responsabili[0] }}"></i>
+                </button>
+                
+                <button class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash"
+                        title="Eliminar"
+                        id="btnEliminar"
+                        width="18px"
+                        style="cursor:pointer;"
+                        data-url="{{ url_for('responsabilidad.eli_responsabilidad', code=t_responsabili[0]) }}"></i>
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+<!-- {% else %}
+    <tr><td colspan="9" class="text-center">eyrthrghrt</td></tr>
+{% endif %} -->

@@ -1,0 +1,6 @@
+MYSQL_HOST = 'localhost' #sql310.infinityfree.com' #'sql10.freesqldatabase.com'
+MYSQL_USER = 'root' #'if0_39447937' #'sql10788381'
+MYSQL_PORT = '3306'
+MYSQL_PASSWORD = '123456' #'OCTIvUXURA1TZ' #'4gRunnB8PN'
+MYSQL_DB = 'elohim' #'if0_39447937_elohim' #'sql10788381'
+HEX_SEC_KEY = 'FlaskMysql2025'
