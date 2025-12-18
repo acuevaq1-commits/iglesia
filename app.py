@@ -13,14 +13,22 @@ from condicion_bp import condicion_bp #
 from extensions import mysql
 from datetime import datetime
 import config
+import os
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = config.HEX_SEC_KEY
-app.config['MYSQL_HOST'] = config.MYSQL_HOST
-app.config['MYSQL_USER'] = config.MYSQL_USER
-app.config['MYSQL_PASSWORD'] = config.MYSQL_PASSWORD
-app.config['MYSQL_DB'] = config.MYSQL_DB
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
+app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST")
+app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER")
+app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
+app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB")
+
+# Para mi local
+# app.config['SECRET_KEY'] = config.HEX_SEC_KEY
+# app.config['MYSQL_HOST'] = config.MYSQL_HOST
+# app.config['MYSQL_USER'] = config.MYSQL_USER
+# app.config['MYSQL_PASSWORD'] = config.MYSQL_PASSWORD
+# app.config['MYSQL_DB'] = config.MYSQL_DB
 
 mysql.init_app(app)
 
@@ -207,4 +215,5 @@ def handle_405(e):
 #--------------------------------------------------
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
+    #app.run(debug=True)
