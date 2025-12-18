@@ -63,61 +63,61 @@ def load_user(email: str):
     return None
 #--------------------------------------------------
 
-@app.route("/")
-def home():
-    return "Flask funciona en Vercel"
+# @app.route("/")
+# def home():
+#     return "Flask funciona en Vercel"
 
 
 
-# @app.route('/', methods=['GET', 'POST'])
-# def index():
-#     if current_user.is_authenticated:
-#         return redirect(url_for('persona.lpersonas'))
-#     return render_template('index.html')
-
-#--------------------------------------------------
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'GET':
-#         if current_user.is_authenticated:
-#             return redirect(url_for('persona.lpersonas'))
-#         return render_template('index.html')        
-
-#     email = request.form['email']
-#     password = request.form['password']
-
-#     cur = mysql.connection.cursor()
-#     cur.execute("SELECT name, surnames, email, password, code FROM usuario WHERE email = %s AND password = %s", (email, password))
-#     row = cur.fetchone()
-#     cur.close()
-
-#     if row is not None:
-#         user = User(row[0], row[1], row[2], row[3])
-#         login_user(user)  # <-- esto marca current_user.is_authenticated = True
-
-#         return redirect(url_for('persona.lpersonas'))
-#     else:
-#         return render_template('index.html', message="Las credenciales no son correctas")
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('persona.lpersonas'))
+    return render_template('index.html')
 
 #--------------------------------------------------
-# @app.route("/logout")
-# @login_required  # 👈 obliga a tener sesión activa
-# def logout():
-#     logout_user()  # Cierra la sesión del usuario
-#     #return redirect(url_for("/"))
-#     return render_template('index.html')
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        if current_user.is_authenticated:
+            return redirect(url_for('persona.lpersonas'))
+        return render_template('index.html')        
+
+    email = request.form['email']
+    password = request.form['password']
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT name, surnames, email, password, code FROM usuario WHERE email = %s AND password = %s", (email, password))
+    row = cur.fetchone()
+    cur.close()
+
+    if row is not None:
+        user = User(row[0], row[1], row[2], row[3])
+        login_user(user)  # <-- esto marca current_user.is_authenticated = True
+
+        return redirect(url_for('persona.lpersonas'))
+    else:
+        return render_template('index.html', message="Las credenciales no son correctas")
+
 #--------------------------------------------------
-# @app.route('/responsabilidades')
-# @login_required  # 👈 obliga a tener sesión activa
-# def responsabilidades():
-#     dirigentes = get_dirigentes()
-#     ujieres = get_ujieres()
-#     lecturas = get_lecturas()
-#     predicadores = get_predicadores()
-#     limpiadores = get_limpiadores()
-#     santacena = get_santacena()
-#     comensales = get_comensales()
-#     return render_template('responsabilidades.html', dirigentes=dirigentes, ujieres = ujieres, lecturas = lecturas, Predicadores = predicadores, Limpiadores = limpiadores, SantaCena = santacena, Comensales= comensales)
+@app.route("/logout")
+@login_required  # 👈 obliga a tener sesión activa
+def logout():
+    logout_user()  # Cierra la sesión del usuario
+    #return redirect(url_for("/"))
+    return render_template('index.html')
+#--------------------------------------------------
+@app.route('/responsabilidades')
+@login_required  # 👈 obliga a tener sesión activa
+def responsabilidades():
+    dirigentes = get_dirigentes()
+    ujieres = get_ujieres()
+    lecturas = get_lecturas()
+    predicadores = get_predicadores()
+    limpiadores = get_limpiadores()
+    santacena = get_santacena()
+    comensales = get_comensales()
+    return render_template('responsabilidades.html', dirigentes=dirigentes, ujieres = ujieres, lecturas = lecturas, Predicadores = predicadores, Limpiadores = limpiadores, SantaCena = santacena, Comensales= comensales)
 #--------------------------------------------------
 def get_dirigentes():
     cursor = mysql.connection.cursor()
@@ -169,42 +169,42 @@ def get_client_ip():
         return xff.split(',')[0].strip()
     return request.remote_addr
 #--------------------------------------------------
-# @app.errorhandler(404)
-# def handle_404(e):
+@app.errorhandler(404)
+def handle_404(e):
 
-#     # Ignora rutas ruidosas
-#     if request.path.startswith('/static/') or request.path == '/favicon.ico':
-#         # Opcional: no registres, solo responde
-#         return render_template('index.html'), 404  # o redirect(url_for('login'))
+    # Ignora rutas ruidosas
+    if request.path.startswith('/static/') or request.path == '/favicon.ico':
+        # Opcional: no registres, solo responde
+        return render_template('index.html'), 404  # o redirect(url_for('login'))
 
-#     path = request.path
-#     method = request.method
-#     ip = get_client_ip()
-#     ua = request.headers.get('User-Agent', '')[:512]  # evita textos muy largos
-#     email = current_user.email if getattr(current_user, 'is_authenticated', False) else None
-#     print(path)
-#     print(method)
-#     print(ip)
-#     print(ua)
-#     print(email)
-#     try:
-#         cur = mysql.connection.cursor()
-#         # Llama a tu SP (ajusta nombre/tipos/longitudes según tu BD)
-#         cur.callproc('sp_reg_intento_ruta_invalida', (path, method, ip, ua, email))
-#         mysql.connection.commit()
-#         cur.close()
-#     except Exception as ex:
-#         # No rompas el flujo si el log falla
-#         app.logger.exception(f"Error registrando 404 de {path}: {ex}")
+    path = request.path
+    method = request.method
+    ip = get_client_ip()
+    ua = request.headers.get('User-Agent', '')[:512]  # evita textos muy largos
+    email = current_user.email if getattr(current_user, 'is_authenticated', False) else None
+    print(path)
+    print(method)
+    print(ip)
+    print(ua)
+    print(email)
+    try:
+        cur = mysql.connection.cursor()
+        # Llama a tu SP (ajusta nombre/tipos/longitudes según tu BD)
+        cur.callproc('sp_reg_intento_ruta_invalida', (path, method, ip, ua, email))
+        mysql.connection.commit()
+        cur.close()
+    except Exception as ex:
+        # No rompas el flujo si el log falla
+        app.logger.exception(f"Error registrando 404 de {path}: {ex}")
 
-#     # Redirige al "index": en tu app, /login (GET) muestra index.html
-#     return redirect(url_for('login'))
+    # Redirige al "index": en tu app, /login (GET) muestra index.html
+    return redirect(url_for('login'))
 #--------------------------------------------------
-# @app.errorhandler(405)
-# def handle_405(e):
-#     # (opcional) registrar similar al 404
-#     return redirect(url_for('login'))
+@app.errorhandler(405)
+def handle_405(e):
+    # (opcional) registrar similar al 404
+    return redirect(url_for('login'))
 #--------------------------------------------------
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
