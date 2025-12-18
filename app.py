@@ -198,5 +198,5 @@ def handle_405(e):
     # (opcional) registrar similar al 404
     return redirect(url_for('login'))
 #--------------------------------------------------
-if __name__ == '__main__':
-    app.run(debug=True)
+#if __name__ == '__main__':
+#    app.run(debug=True)
