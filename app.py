@@ -15,20 +15,22 @@ from datetime import datetime
 import config
 import os
 
+#def crear_app():
+
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
-app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST")
-app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER")
-app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
-app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB")
+# app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
+# app.config['MYSQL_HOST'] = os.environ.get("MYSQL_HOST")
+# app.config['MYSQL_USER'] = os.environ.get("MYSQL_USER")
+# app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
+# app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB")
 
 # Para mi local
-# app.config['SECRET_KEY'] = config.HEX_SEC_KEY
-# app.config['MYSQL_HOST'] = config.MYSQL_HOST
-# app.config['MYSQL_USER'] = config.MYSQL_USER
-# app.config['MYSQL_PASSWORD'] = config.MYSQL_PASSWORD
-# app.config['MYSQL_DB'] = config.MYSQL_DB
+app.config['SECRET_KEY'] = config.HEX_SEC_KEY
+app.config['MYSQL_HOST'] = config.MYSQL_HOST
+app.config['MYSQL_USER'] = config.MYSQL_USER
+app.config['MYSQL_PASSWORD'] = config.MYSQL_PASSWORD
+app.config['MYSQL_DB'] = config.MYSQL_DB
 
 mysql.init_app(app)
 
@@ -70,12 +72,6 @@ def load_user(email: str):
         return User(row[0], row[1], row[2], row[3])
     return None
 #--------------------------------------------------
-
-# @app.route("/")
-# def home():
-#     return "Flask funciona en Vercel"
-
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -214,6 +210,10 @@ def handle_405(e):
     return redirect(url_for('login'))
 #--------------------------------------------------
 
+#return app
+
 if __name__ == '__main__':
-    app.run()
-    #app.run(debug=True)
+    app.run(debug=True)
+    #app = crear_app()
+    #app.run()
+    
